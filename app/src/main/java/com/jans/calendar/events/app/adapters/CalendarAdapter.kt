@@ -50,35 +50,9 @@ class CalendarAdapter(private var eventsList: List<Event>?) :
             // set Event Description
             tvDescription.text = event.description
             // set Event Date
-            val dayName = getDayName(event.year, event.month, event.day)
-            val formattedDate = "Date: ${event.day} ${getMonthName(event.year, event.month)} ${event.year}, $dayName"
-            tvDate.text = formattedDate
-        }
-
-
-        private fun formatTime(hour: Int, minute: Int): String {
-            val calendar = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, hour)
-                set(Calendar.MINUTE, minute)
-            }
-            val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
-            return formatter.format(calendar.time)
-        }
-
-        private fun getDayName(year: Int, month: Int, day: Int): String {
-            val calendar = Calendar.getInstance().apply {
-                set(year, month - 1, day) // month is 0-based in Calendar
-            }
-            val formatter = SimpleDateFormat("EEEE", Locale.getDefault())
-            return formatter.format(calendar.time)
-        }
-
-        private fun getMonthName(year: Int, month: Int): String {
-            val calendar = Calendar.getInstance().apply {
-                set(year, month - 1, 1) // Month is 0-based in Calendar
-            }
-            val formatter = SimpleDateFormat("MMMM", Locale.getDefault())
-            return formatter.format(calendar.time)
+            val dateString = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS",
+                Locale.getDefault()).parse(event.date)!!.toString()
+            tvDate.text = dateString
         }
 
 

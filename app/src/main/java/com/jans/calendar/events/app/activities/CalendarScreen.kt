@@ -2,19 +2,24 @@ package com.jans.calendar.events.app.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.jans.calendar.events.app.R
 import com.jans.calendar.events.app.adapters.CalendarAdapter
 import com.jans.calendar.events.app.databinding.ActivityCalendarBinding
 import com.jans.calendar.events.app.model.Event
 import com.jans.calendar.events.app.utils.ConfigApp
-import com.jans.calendar.events.app.utils.ConfigApp.Companion.eventList
+import com.jans.calendar.events.app.utils.ConfigApp.Companion.createICalEvents
+import com.jans.calendar.events.app.utils.ConfigApp.Companion.eventsList
+//import com.jans.calendar.events.app.utils.ConfigApp.Companion.eventList
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -24,95 +29,63 @@ class CalendarScreen : AppCompatActivity() {
 
     private lateinit var b: ActivityCalendarBinding
 
+    private lateinit var calendarEventList: List<Event>
+
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = ActivityCalendarBinding.inflate(layoutInflater)
         setContentView(b.root)
 
-        b.backBtn.setOnClickListener {
-            finish()
-        }
+        // initialize List
+        calendarEventList = eventsList(this)
+
+        // Initialize Buttons Click Listeners
+        buttonsInit()
 
         // Declaring Number of Events
-        b.tvNumberOfEvents.text = "Number of Events = ${eventList.size}"
+        b.tvNumberOfEvents.text = "Number of Events = ${calendarEventList.size}"
 
-       // Showing Calendar Events
+       // Showing Calendar Events in RecyclerView
        setUpCalendarRV()
 
 
+    }
 
+    private fun buttonsInit() {
+        // back button
+        b.backBtn.setOnClickListener {
+            finish()
+        }
         // Adding Events
-
         b.btnAddEvents.setOnClickListener{
-
-
-            val eventFile = createICalEvents(eventList)
+            // lets generate an ICS File
+            val eventFile = createICalEvents(this,calendarEventList)
+            // Lets make A URI for ICS File
             val eventFileUri = FileProvider.getUriForFile(
                 this, "$packageName.provider",
                 eventFile)
-
+            // Send it to Calendar App
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setDataAndType(eventFileUri, "text/calendar")
             intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             startActivity(intent)
-
         }
-
-
-
     }
 
     private fun setUpCalendarRV() {
         val recyclerView = b.recyclerView
         // Code to Populate List
-        val eventsList = ConfigApp.eventList
-        Log.d("Response123", "${eventsList.size}")
+        Log.d("Response123", "${calendarEventList.size}")
         // Code for Setup Adapter for Recycler View
-        val namesAdapter = CalendarAdapter(eventsList)
+        val namesAdapter = CalendarAdapter(calendarEventList)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = namesAdapter
     }
 
 
 
-    private fun createICalEvents(events: List<Event>): File {
-        val icsFile = File(externalCacheDir, "AllDayEvents.ics")
 
-        val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-
-        val icsContent = buildString {
-            appendLine("BEGIN:VCALENDAR")
-            appendLine("VERSION:2.0")
-            appendLine("PRODID:-//ChatGPT//iCal4j 1.0//EN")
-
-            for (event in events) {
-                val eventStart = Calendar.getInstance().apply {
-                    set(event.year, event.month - 1, event.day, 0, 0, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }
-                val eventEnd = eventStart.clone() as Calendar
-                eventEnd.add(Calendar.DAY_OF_MONTH, 1) // All-day event, so the end is the next day
-
-                appendLine("BEGIN:VEVENT")
-                appendLine("DTSTAMP:${dateFormat.format(Calendar.getInstance().time)}Z")
-                appendLine("UID:${(Math.random() * Long.MAX_VALUE).toLong()}@yourdomain.com")
-                appendLine("SUMMARY:${event.title}")
-                appendLine("DESCRIPTION:${event.description}")
-                appendLine("LOCATION:${event.location}")
-                appendLine("DTSTART;VALUE=DATE:${dateFormat.format(eventStart.time)}")
-                appendLine("DTEND;VALUE=DATE:${dateFormat.format(eventEnd.time)}")
-                appendLine("END:VEVENT")
-            }
-
-            appendLine("END:VCALENDAR")
-        }
-
-        FileOutputStream(icsFile).use { stream ->
-            stream.write(icsContent.toByteArray())
-        }
-
-        return icsFile
-    }
 
 }

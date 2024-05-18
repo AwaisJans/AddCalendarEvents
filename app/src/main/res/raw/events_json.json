@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Team Building Day",
+    "description": "A day for team activities",
+    "location": "Office",
+    "date": "2024-06-01 00:00:00.000000"
+  },
+  {
+    "title": "Project Deadline",
+    "description": "Submit the final project",
+    "location": "Office",
+    "date": "2024-06-02 00:00:00.000000"
+  },
+  {
+    "title": "Holiday",
+    "description": "Company-wide holiday",
+    "location": "Company",
+    "date": "2024-06-03 00:00:00.000000"
+  },
+  {
+    "title": "Annual Conference",
+    "description": "Company-wide annual conference",
+    "location": "Conference Center",
+    "date": "2024-06-04 00:00:00.000000"
+  },
+  {
+    "title": "Employee Training",
+    "description": "Mandatory training for all employees",
+    "location": "Training Room",
+    "date": "2024-06-05 00:00:00.000000"
+  },
+  {
+    "title": "Quarterly Review",
+    "description": "Review performance for the quarter",
+    "location": "Meeting Room",
+    "date": "2024-06-06 00:00:00.000000"
+  },
+  {
+    "title": "Client Meeting",
+    "description": "Meeting with a major client",
+    "location": "Client's Office",
+    "date": "2024-06-07 00:00:00.000000"
+  },
+  {
+    "title": "Team Outing",
+    "description": "Team outing for relaxation",
+    "location": "Resort",
+    "date": "2024-06-08 00:00:00.000000"
+  },
+  {
+    "title": "New Project Kickoff",
+    "description": "Kickoff meeting for the new project",
+    "location": "Main Office",
+    "date": "2024-06-09 00:00:00.000000"
+  },
+  {
+    "title": "Board Meeting",
+    "description": "Quarterly board meeting",
+    "location": "Board Room",
+    "date": "2024-06-10 00:00:00.000000"
+  }
+]
