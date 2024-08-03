@@ -5,17 +5,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.jans.calendar.events.app.R
-import com.jans.calendar.events.app.model.Event
+import com.jans.calendar.events.app.model.EventCal
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 
 @SuppressLint("SetTextI18n")
-class CalendarAdapter(private var eventsList: List<Event>?) :
+class CalendarAdapter(private var eventsList: List<EventCal>?) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
     private lateinit var mContext: Context
@@ -44,14 +42,14 @@ class CalendarAdapter(private var eventsList: List<Event>?) :
         private var tvDescription: TextView = itemView.findViewById(R.id.tvEventDesc)
         private var tvDate: TextView = itemView.findViewById(R.id.tvEventDate)
 
-        fun bind(event: Event) {
+        fun bind(eventCal: EventCal) {
             // set Event Title
-            tvTitle.text = event.title
+            tvTitle.text = eventCal.title
             // set Event Description
-            tvDescription.text = event.description
+            tvDescription.text = eventCal.description
             // set Event Date
             val dateString = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS",
-                Locale.getDefault()).parse(event.date)!!.toString()
+                Locale.getDefault()).parse(eventCal.date)!!.toString()
             tvDate.text = dateString
         }
 
